@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Petualangan Alat Optik</title>
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0}
+body{background:#020617;height:100vh;display:grid;place-items:center;font-family:'Plus Jakarta Sans',sans-serif;color:#fff;overflow:hidden}
+#stage{width:min(100vw,177.78vh);aspect-ratio:16/9;position:relative;container-type:size;overflow:hidden;background:#0F172A}
+#deck{position:absolute;inset:0;perspective:120cqw;font-size:1.4cqw}
+h1,h2,h3,.btn{font-family:'Chakra Petch',sans-serif}
+h2{font-size:2.2em;color:#67e8f9;text-shadow:0 .06em 0 #0e7490,0 .2em .4em rgba(0,0,0,.4)}
+p,li{line-height:1.45;font-size:1.02em}
+.s{position:absolute;inset:0;padding:2.4em 4em 6em;display:flex;flex-direction:column;gap:.9em;opacity:0;pointer-events:none;transform:rotateY(-28deg) translateX(10%);transition:.7s cubic-bezier(.2,.8,.2,1)}
+.s.on{opacity:1;pointer-events:auto;transform:none}.s.prev{transform:rotateY(28deg) translateX(-10%)}
+.b1{background:radial-gradient(circle at 70% 20%,#0e7490,#0F172A 60%)}
+.b2{background:linear-gradient(135deg,#2e1065,#8B5CF6 120%)}
+.b3{background:linear-gradient(135deg,#1e1b4b,#7c2d12 130%)}
+.b4{background:linear-gradient(135deg,#0F172A,#7f1d1d 140%)}
+.b5{background:linear-gradient(135deg,#312e81,#F59E0B 160%)}
+.glass{background:rgba(255,255,255,.1);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.2);border-radius:1.2em;padding:1.1em;box-shadow:0 .25em 0 rgba(0,0,0,.25),0 1em 2em rgba(0,0,0,.35),inset 0 0 1em rgba(255,255,255,.08)}
+.row{display:flex;gap:1.4em;flex:1;min-height:0}.col{flex:1;display:flex;flex-direction:column;gap:.7em;justify-content:center}
+.btn{background:linear-gradient(#22d3ee,#0891b2);color:#042f3a;border:0;border-radius:2em;padding:.5em 1.2em;font-weight:700;font-size:1em;cursor:pointer;box-shadow:0 .25em 0 #0e7490,0 .6em 1em rgba(0,0,0,.4);transition:.15s}
+.btn:hover{transform:translateY(-.15em)}.btn:active{transform:translateY(.15em)}
+.btn.o{background:linear-gradient(#fb923c,#FF6B6B);color:#450a0a;box-shadow:0 .25em 0 #b91c1c,0 .6em 1em rgba(0,0,0,.4)}
+.pulse{animation:pu 1.6s infinite}@keyframes pu{0%{box-shadow:0 .25em 0 #0e7490,0 0 0 0 rgba(6,182,212,.7)}100%{box-shadow:0 .25em 0 #0e7490,0 0 0 2em rgba(6,182,212,0)}}
+.cards{display:flex;gap:1em}.cards>*{flex:1;cursor:pointer;transition:.3s;text-align:center;display:flex;flex-direction:column;justify-content:center;gap:.4em}
+.cards>*:hover{transform:translateY(-.4em)}
+.q .hid{max-height:0;opacity:0;overflow:hidden;transition:.5s}.q.open .hid{max-height:14em;opacity:1}.q .ic{font-size:2.6em}.q.open{border-color:#F59E0B;box-shadow:0 0 2em rgba(245,158,11,.5)}
+.n.sel{border-color:#22d3ee;box-shadow:0 0 2em #06B6D4}.n .ic{font-size:2em}
+.ck{display:flex;align-items:center;gap:1em;cursor:pointer;margin:.4em 0;transition:.3s}.ck i{width:2em;height:2em;border:2px solid #fff;border-radius:.5em;display:grid;place-items:center;font-style:normal;flex:none}
+.ck.done{background:rgba(34,197,94,.25)}.ck.done i{background:#22c55e;border-color:#22c55e}
+.bd{font-size:3em;filter:grayscale(1);opacity:.25;transition:.5s;transform:scale(.6)}.bd.on{filter:none;opacity:1;transform:scale(1.2) rotate(360deg)}
+svg{max-width:100%;max-height:100%}
+input[type=range],select{width:100%;accent-color:#F59E0B;font:inherit}
+.l{stroke-dasharray:400;stroke-dashoffset:400;animation:d .9s forwards}@keyframes d{to{stroke-dashoffset:0}}
+.fc{perspective:80em;cursor:pointer;flex:1}.fi{position:relative;width:100%;height:100%;transition:.8s;transform-style:preserve-3d}.fc.f .fi{transform:rotateY(180deg)}
+.fa,.fb{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:.5em}.fb{transform:rotateY(180deg);background:rgba(88,28,135,.55)}
+.tab{opacity:.5}.tab.on{opacity:1}
+.tb{width:100%;border-collapse:collapse;font-size:.95em}.tb td,.tb th{padding:.55em .7em;border-bottom:1px solid rgba(255,255,255,.2);text-align:left}.tb th{color:#fde68a;font-family:'Chakra Petch'}
+details{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:.8em;padding:.5em 1em;margin:.3em 0}summary{cursor:pointer;font-weight:700}
+.chip{display:inline-block;background:rgba(255,255,255,.15);border-radius:.6em;padding:.2em .7em;margin:.15em;font-size:.9em}
+#md{position:absolute;inset:0;z-index:30;background:rgba(2,6,23,.8);display:none;place-items:center;backdrop-filter:blur(6px)}#md.show{display:grid}
+#md .glass{text-align:center;animation:po .6s cubic-bezier(.2,1.6,.4,1)}@keyframes po{from{transform:scale(.2) rotateY(180deg)}}
+#nav{position:absolute;left:50%;bottom:1.2cqw;transform:translateX(-50%);display:flex;gap:1.5cqw;align-items:center;z-index:20;padding:.6cqw 1.5cqw;border-radius:5cqw;background:rgba(15,23,42,.65);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.2);font-size:1.1cqw}
+#nav button{font-family:'Chakra Petch';background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:3cqw;padding:.5cqw 1.4cqw;font-size:1.1cqw;cursor:pointer}#nav button:hover{background:#06B6D4;color:#042f3a}
+#nav span{font-family:'Chakra Petch';letter-spacing:.1em;min-width:10cqw;text-align:center}
+#guide{position:absolute;right:1.2cqw;bottom:0;width:15cqw;z-index:15;display:flex;align-items:flex-end;pointer-events:none;font-size:1.4cqw}
+#guide svg{width:10.5cqw;flex:none;margin-left:auto;animation:bob 3s ease-in-out infinite}
+#bub{position:absolute;right:11cqw;bottom:2.2cqw;width:16cqw;background:#fff;color:#1e1b4b;border-radius:1em 1em .2em 1em;padding:.7em .9em;font-size:.82em;line-height:1.35;font-weight:600;box-shadow:0 .4em 1em rgba(0,0,0,.4);animation:pop .4s}
+@keyframes bob{50%{transform:translateY(-.5cqw)}}@keyframes pop{from{transform:scale(.6);opacity:0}}
+.arm{transform-origin:98px 108px;animation:wv 1.6s ease-in-out infinite}@keyframes wv{50%{transform:rotate(28deg)}}
+.tag{align-self:flex-start;font:700 .72em 'Chakra Petch';letter-spacing:.15em;background:#F59E0B;color:#422006;padding:.3em .9em;border-radius:.3em;transform:rotate(-2deg);box-shadow:0 .2em 0 rgba(0,0,0,.35)}
+#qz button{margin:.2em 0}
+#pg{position:absolute;left:0;bottom:0;height:.5cqw;background:linear-gradient(90deg,#06B6D4,#8B5CF6,#FF6B6B);box-shadow:0 0 1cqw #06B6D4;transition:.6s;z-index:21}
+</style></head><body>
+<div id="stage"><div id="deck">
+
+<section class="s on b1" style="align-items:center;justify-content:center;text-align:center">
+<svg viewBox="0 0 400 130" style="width:40%"><ellipse cx="200" cy="65" rx="20" ry="55" fill="rgba(103,232,249,.25)" stroke="#a5f3fc" stroke-width="3"/><g fill="none" stroke-width="3"><path class="l" d="M0 25H200L330 65" stroke="#ef4444"/><path class="l" style="animation-delay:.2s" d="M0 65H200L330 65" stroke="#facc15"/><path class="l" style="animation-delay:.4s" d="M0 105H200L330 65" stroke="#22c55e"/></g></svg>
+<h1 style="font-size:4.2em;line-height:1.05;color:#ecfeff;text-shadow:0 .06em 0 #0891b2,0 .12em 0 #155e75,0 .3em .5em rgba(0,0,0,.6)">PETUALANGAN<br>ALAT OPTIK</h1>
+<p style="color:#a5f3fc">IPA Fase D (Kelas VIII) SMP/MTs • Disusun oleh April Damayanti Sholekhah</p>
+<button class="btn pulse" onclick="go(1)">▶ Mulai Misi Belajar</button></section>
+
+<section class="s b2"><h2>🎯 Capaian & Tujuan Pembelajaran</h2><p>Ketuk setiap kartu untuk membuka detailnya!</p>
+<div class="cards" style="flex:1">
+<div class="glass q" onclick="this.classList.toggle('open')"><div class="ic">📘</div><h3>Capaian</h3><p class="hid">Peserta didik memahami getaran dan gelombang, pemantulan dan pembiasan cahaya termasuk alat-alat optik yang sering dimanfaatkan dalam kehidupan sehari-hari.</p></div>
+<div class="glass q" onclick="this.classList.toggle('open')"><div class="ic">👁️</div><h3>Tujuan 1</h3><p class="hid">Mengidentifikasi bagian-bagian mata sebagai alat optik alami, menjelaskan fungsi tiap bagian, serta cacat mata yang dapat terjadi.</p></div>
+<div class="glass q" onclick="this.classList.toggle('open')"><div class="ic">🔭</div><h3>Tujuan 2</h3><p class="hid">Mengidentifikasi macam-macam alat optik buatan beserta komponen-komponennya.</p></div></div></section>
+
+<section class="s b2"><h2>🏅 Indikator Capaian</h2><p>Ketuk indikator yang sudah kamu kuasai untuk membuka badge!</p>
+<div class="row"><div class="glass col" style="flex:1.6">
+<div class="ck" onclick="ck(this,0)"><i></i>Menyebutkan bagian-bagian mata dengan tepat</div>
+<div class="ck" onclick="ck(this,1)"><i></i>Mengklasifikasikan jenis cacat mata beserta alat bantunya</div>
+<div class="ck" onclick="ck(this,2)"><i></i>Mengidentifikasi komponen dan fungsi alat optik buatan</div></div>
+<div class="glass col" style="text-align:center"><div><span class="bd">👁️</span><span class="bd">👓</span><span class="bd">🔬</span></div><h3 id="bm">Kumpulkan 3 badge!</h3></div></div></section>
+
+<section class="s b1"><h2>🗺️ Peta Konsep Alat Optik</h2>
+<div class="row"><div class="glass col" style="justify-content:flex-start"><h3>Alat Optik Alami</h3><div><b>Mata:</b> <span class="chip">Kornea</span><span class="chip">Pupil</span><span class="chip">Iris</span><span class="chip">Retina</span><span class="chip">Lensa mata</span></div><div><b>Cacat mata:</b> <span class="chip">Miopi</span><span class="chip">Hipermetropi</span><span class="chip">Astigmatisme</span></div></div>
+<div class="glass col" style="flex:1.5;justify-content:flex-start"><h3>Alat Optik Buatan</h3><div><b>Kacamata:</b> <span class="chip">Lensa cembung</span><span class="chip">Lensa cekung</span><span class="chip">Lensa silinder</span></div><div><b>Kamera:</b> <span class="chip">Lensa</span><span class="chip">Diafragma</span><span class="chip">Shutter</span><span class="chip">Film</span></div><div><b>Mikroskop:</b> <span class="chip">Lensa objektif</span><span class="chip">Lensa okuler</span></div><div><b>Teleskop:</b> <span class="chip">Lensa objektif</span><span class="chip">Lensa okuler</span></div><div><b>Lup:</b> <span class="chip">Lensa cembung tunggal</span></div></div></div></section>
+
+<section class="s b3"><h2>👁️ Mata: Alat Optik Alami</h2><p>Cahaya masuk lewat kornea → pupil → lensa → jatuh di retina. Ketuk bagian mata!</p>
+<div class="row"><div class="col"><div class="cards" style="flex-wrap:wrap">
+<div class="glass n" onclick="pk(this,'<b>Kornea</b>: lapisan bening paling depan, pintu masuk cahaya. Menyumbang sekitar 2/3 kekuatan refraksi mata, melindungi dari kuman, debu, dan sinar UV. Tersusun atas 5 lapisan utama yang menjaga kejernihannya.');hl(0)"><h3>Kornea</h3></div>
+<div class="glass n" onclick="pk(this,'<b>Pupil</b>: lubang hitam kecil di tengah iris yang mengatur jumlah cahaya yang masuk. Melebar saat redup, menyempit saat terang.');hl(1)"><h3>Pupil</h3></div>
+<div class="glass n" onclick="pk(this,'<b>Iris</b>: bagian berwarna yang mengatur besar kecilnya pupil. Warnanya ditentukan melanosit: eumelanin (cokelat-gelap) dan feomelanin (terang).');hl(2)"><h3>Iris</h3></div>
+<div class="glass n" onclick="pk(this,'<b>Retina</b>: selaput jala tipis di belakang bola mata yang sangat peka cahaya, tempat bayangan terbentuk. Tersusun atas jutaan sel fotoreseptor (kerucut dan batang). Mengubah bayangan menjadi impuls listrik ke otak lewat saraf optik.');hl(3)"><h3>Retina</h3></div>
+<div class="glass n" onclick="pk(this,'<b>Lensa mata</b>: transparan dan elastis, membiaskan dan memfokuskan cahaya ke retina. Kemampuannya menebal dan menipis (diatur otot siliaris) disebut akomodasi.');hl(4)"><h3>Lensa</h3></div></div>
+<div class="glass pn">Pilih salah satu bagian mata di atas.</div></div>
+<div class="glass col" style="align-items:center;flex:.8"><svg viewBox="0 0 300 220"><circle cx="170" cy="110" r="75" fill="rgba(6,182,212,.2)" stroke="#e0f2fe" stroke-width="3"/><path id="e0" d="M105 70Q85 110 105 150" fill="none" stroke="#67e8f9" stroke-width="6"/><circle id="e1" cx="112" cy="110" r="6" fill="#000" stroke="#fff"/><path id="e2" d="M112 60V92M112 128V160" stroke="#a78bfa" stroke-width="8"/><ellipse id="e4" cx="132" cy="110" rx="9" ry="24" fill="rgba(253,224,71,.4)" stroke="#fde047" stroke-width="3"/><path id="e3" d="M232 62Q252 110 232 158" fill="none" stroke="#fb7185" stroke-width="6"/><path d="M10 85L112 98L240 110M10 135L112 122L240 110" fill="none" stroke="#F59E0B" stroke-width="2" opacity=".7"/></svg></div></div></section>
+
+<section class="s b5"><h2>🌗 Pupil & Sel Retina</h2><p>Geser slider intensitas cahaya dan amati ukuran pupil!</p>
+<div class="row"><div class="glass col"><label>Intensitas cahaya: <b id="lvv">50</b>%<input type="range" id="lv" min="0" max="100" value="50" oninput="pu()"></label><p id="lt" style="font-size:1.2em;font-family:'Chakra Petch'"></p><p style="font-size:.9em">Sel <b>kerucut</b> (cone): cahaya terang, membedakan warna & detail. Sel <b>batang</b> (rod): cahaya redup/gelap.</p></div>
+<div class="glass col" style="align-items:center"><svg viewBox="0 0 300 200"><circle cx="150" cy="100" r="85" fill="#f8fafc"/><circle cx="150" cy="100" r="58" fill="#92400e" stroke="#451a03" stroke-width="3"/><circle id="pp" cx="150" cy="100" r="22" fill="#000"/><circle cx="135" cy="85" r="7" fill="#fff" opacity=".7"/></svg></div></div></section>
+
+<section class="s b3"><h2>🔍 Akomodasi Lensa Mata</h2><p>Pilih jarak objek, lalu lihat perubahan lensa dan otot siliaris.</p>
+<div class="row"><div class="glass col"><div style="display:flex;gap:.6em"><button class="btn tab on" id="a0" onclick="ak(0)">⛰️ Objek jauh</button><button class="btn tab" id="a1" onclick="ak(1)">📖 Objek dekat</button></div><p id="at"></p><p style="font-size:.9em;color:#fde68a">Punctum proximum = jarak terdekat yang masih jelas (±25 cm, mata normal). Punctum remotum = jarak terjauh tanpa akomodasi (tak terhingga, mata normal).</p></div>
+<div class="glass col" style="align-items:center"><svg viewBox="0 0 300 200"><ellipse id="lz" cx="150" cy="100" rx="22" ry="60" fill="rgba(253,224,71,.4)" stroke="#fde047" stroke-width="4" style="transition:.7s;transform-origin:center;transform-box:fill-box"/><rect x="132" y="20" width="36" height="14" rx="6" fill="#fb7185"/><rect x="132" y="166" width="36" height="14" rx="6" fill="#fb7185"/><text x="175" y="30" fill="#fff" font-size="12">otot siliaris</text></svg></div></div></section>
+
+<section class="s b4"><h2>😵 Cacat Mata</h2><p>Pilih cacat mata, lalu coba pakai kacamata!</p>
+<div class="row"><div class="glass col"><div style="display:flex;gap:.5em;flex-wrap:wrap"><button class="btn tab on" id="c0" onclick="cm(0)">Miopi</button><button class="btn tab" id="c1" onclick="cm(1)">Hipermetropi</button><button class="btn tab" id="c2" onclick="cm(2)">Astigmatisme</button></div><p id="ct"></p><p id="cs" style="font-family:'Chakra Petch';color:#fde68a"></p><button class="btn o" id="gb" onclick="gl=!gl;dg()"></button></div>
+<div class="glass col" style="align-items:center"><svg id="ce" viewBox="0 0 300 220"></svg></div></div></section>
+
+<section class="s b2"><h2>👓 Kacamata</h2><p>Terdiri atas <b>lensa</b> dan <b>frame</b>; bekerja dengan pembiasan cahaya. Ketuk kartu untuk memutarnya!</p>
+<div class="row">
+<div class="fc" onclick="this.classList.toggle('f')"><div class="fi"><div class="fa glass"><div style="font-size:3.5em">🔍</div><h3>Lensa Cembung</h3></div><div class="fb glass"><p>Untuk <b>rabun dekat (hipermetropi)</b>. Bersifat mengumpulkan (konvergen), sehingga titik fokus dimajukan ke retina.</p></div></div></div>
+<div class="fc" onclick="this.classList.toggle('f')"><div class="fi"><div class="fa glass"><div style="font-size:3.5em">🔎</div><h3>Lensa Cekung</h3></div><div class="fb glass"><p>Untuk <b>rabun jauh (miopi)</b>. Bersifat menyebarkan (divergen), sehingga titik fokus bergeser ke belakang tepat di retina.</p></div></div></div>
+<div class="fc" onclick="this.classList.toggle('f')"><div class="fi"><div class="fa glass"><div style="font-size:3.5em">🎯</div><h3>Lensa Silinder</h3></div><div class="fb glass"><p>Untuk <b>astigmatisme</b>. Memperbaiki pembiasan pada satu sumbu tertentu agar cahaya terfokus merata di retina.</p></div></div></div></div></section>
+
+<section class="s b1"><h2>📷 Kamera</h2><p>Cara kerjanya mirip mata. Ketuk komponen untuk melihat fungsinya!</p>
+<div class="cards"><div class="glass n" onclick="pk(this,'<b>Lensa cembung</b>: membiaskan cahaya dari objek. Posisinya diatur agar bayangan jatuh tepat di film. Bayangan: <b>nyata, terbalik, diperkecil</b>.')"><div class="ic">🔍</div><h3>Lensa</h3></div>
+<div class="glass n" onclick="pk(this,'<b>Diafragma</b>: mengatur banyaknya cahaya yang masuk (mirip pupil pada mata).')"><div class="ic">⭕</div><h3>Diafragma</h3></div>
+<div class="glass n" onclick="pk(this,'<b>Shutter (rana)</b>: mengatur lamanya cahaya mengenai film.')"><div class="ic">⏱️</div><h3>Shutter</h3></div>
+<div class="glass n" onclick="pk(this,'<b>Film</b>: media peka cahaya yang merekam bayangan (berperan seperti retina). Setelah itu film dicuci (developing) agar gambar terlihat.')"><div class="ic">🎞️</div><h3>Film</h3></div></div>
+<div class="glass pn" style="flex:1">Kamera analog memakai film sebagai media perekam, kamera digital memakai sensor. Prinsipnya mirip mata: cahaya masuk lewat lensa cembung dan membentuk bayangan nyata, terbalik, diperkecil di film. Pilih salah satu komponen di atas.</div></section>
+
+<section class="s b4"><h2>🔬 Mikroskop</h2><p>Mengamati objek sangat kecil: sel, jaringan, mikroorganisme.</p>
+<div class="row"><div class="glass col"><p>🔹 <b>Lensa objektif</b> (dekat preparat): membentuk bayangan pertama yang <b>nyata, terbalik, diperbesar</b>.</p><p>🔹 <b>Lensa okuler</b> (dekat mata): memperbesar lagi, bayangan akhir <b>maya, tegak, diperbesar</b>.</p><p>Pendukung: sumber cahaya, diafragma, kondensor (mengatur intensitas dan fokus cahaya). Mikroskop <b>binokuler</b> punya dua okuler sehingga kedua mata dipakai sekaligus dan tidak mudah lelah.</p></div>
+<div class="glass col"><label>Pilih lensa objektif:</label><div style="display:flex;gap:.5em"><button class="btn tab" onclick="mk(4,this)">4×</button><button class="btn tab on" onclick="mk(10,this)">10×</button><button class="btn tab" onclick="mk(40,this)">40×</button><button class="btn tab" onclick="mk(100,this)">100×</button></div><p id="mt" style="font-family:'Chakra Petch';font-size:1.2em;color:#fde68a"></p></div></div></section>
+
+<section class="s b5"><h2>🔭 Teleskop</h2><p>Mengamati benda langit yang sangat jauh. Ketuk kartu!</p>
+<div class="cards"><div class="glass n" onclick="pk(this,'<b>Lensa objektif</b>: di bagian depan, lensa cembung berdiameter besar. Makin besar diameternya, makin banyak cahaya terkumpul sehingga bayangan terang dan detail. Bayangan: <b>nyata, terbalik, diperkecil</b>.')"><div class="ic">🔭</div><h3>Objektif</h3></div>
+<div class="glass n" onclick="pk(this,'<b>Lensa okuler</b>: dekat mata, bekerja seperti lup. Memperbesar bayangan dari objektif. Bayangan akhir: <b>maya, terbalik, diperbesar</b>.')"><div class="ic">👁️</div><h3>Okuler</h3></div>
+<div class="glass n" onclick="pk(this,'<b>Teleskop refraktor</b> mengumpulkan cahaya dengan <b>lensa</b> (pembiasan).')"><div class="ic">🔍</div><h3>Refraktor</h3></div>
+<div class="glass n" onclick="pk(this,'<b>Teleskop reflektor</b>: cermin utama memantulkan cahaya ke titik fokus, lalu diteruskan ke lensa okuler.')"><div class="ic">🪞</div><h3>Reflektor</h3></div></div>
+<div class="glass pn" style="flex:1">Teleskop mengumpulkan cahaya benda langit lalu memfokuskannya dengan sistem lensa atau cermin, berdasarkan pembiasan dan pemantulan cahaya. Pilih salah satu bagian di atas.</div></section>
+
+<section class="s b2"><h2>🔎 Lup (Kaca Pembesar)</h2><p>Lensa cembung tunggal, f = 5 cm. Geser jarak objek (s) dan lihat bayangannya!</p>
+<div class="row"><div class="glass col"><label>Jarak objek s: <b id="sv">3</b> cm<input type="range" id="sl" min="1" max="10" step=".5" value="3" oninput="lp()"></label><p id="lr" style="font-family:'Chakra Petch';font-size:1.15em;color:#fde68a"></p><p style="font-size:.9em">Lup dipakai dengan menempatkan objek <b>di antara lensa dan titik fokus</b>: bayangan maya, tegak, diperbesar, tidak bisa ditangkap layar. Contoh: membaca tulisan kecil, mengamati serangga.</p></div>
+<div class="glass col" style="align-items:center"><svg viewBox="0 0 300 200"><ellipse cx="150" cy="100" rx="12" ry="70" fill="rgba(103,232,249,.3)" stroke="#a5f3fc" stroke-width="3"/><line x1="0" y1="100" x2="300" y2="100" stroke="#fff" opacity=".4" stroke-dasharray="4"/><circle cx="100" cy="100" r="3" fill="#fde68a"/><circle cx="200" cy="100" r="3" fill="#fde68a"/><text x="92" y="118" fill="#fde68a" font-size="11">F</text><text x="194" y="118" fill="#fde68a" font-size="11">F</text><line id="ob" stroke="#FF6B6B" stroke-width="6"/><text id="ol" fill="#FF6B6B" font-size="11"></text></svg></div></div></section>
+
+<section class="s b3"><h2>📊 Perbandingan Alat Optik</h2>
+<div class="glass"><table class="tb"><tr><th>Alat</th><th>Komponen</th><th>Sifat bayangan</th></tr>
+<tr><td>Kamera</td><td>Lensa cembung, diafragma, shutter, film</td><td>Nyata, terbalik, diperkecil</td></tr>
+<tr><td>Mikroskop</td><td>Objektif → Okuler</td><td>Objektif: nyata, terbalik, diperbesar<br>Okuler: maya, tegak, diperbesar</td></tr>
+<tr><td>Teleskop</td><td>Objektif → Okuler</td><td>Objektif: nyata, terbalik, diperkecil<br>Okuler: maya, terbalik, diperbesar</td></tr>
+<tr><td>Lup</td><td>Lensa cembung tunggal</td><td>Maya, tegak, diperbesar</td></tr></table></div></section>
+
+<section class="s b5"><h2>📖 Glosarium</h2><div class="glass" style="columns:2;column-gap:2em"><p style="font-size:.88em;break-inside:avoid;margin-bottom:.4em"><b style="color:#fde68a">Akomodasi</b>: Kemampuan lensa mata menebal dan menipis agar bayangan jatuh tepat di retina.</p><p style="font-size:.88em;break-inside:avoid;margin-bottom:.4em"><b style="color:#fde68a">Astigmatisme</b>: Kelainan mata akibat permukaan kornea/lensa tidak rata sehingga bayangan kabur atau berbayang.</p><p style="font-size:.88em;break-inside:avoid;margin-bottom:.4em"><b style="color:#fde68a">Diafragma</b>: Bagian kamera/mikroskop yang mengatur jumlah cahaya yang masuk.</p><p style="font-size:.88em;break-inside:avoid;margin-bottom:.4em"><b style="color:#fde68a">Film</b>: Media peka cahaya pada kamera analog untuk merekam bayangan.</p><p style="font-size:.88em;break-inside:avoid;margin-bottom:.4em"><b style="color:#fde68a">Hipermetropi</b>: Bayangan jatuh di belakang retina sehingga objek dekat kabur.</p><p style="font-size:.88em;break-inside:avoid;margin-bottom:.4em"><b style="color:#fde68a">Iris</b>: Bagian mata berwarna yang mengatur besar kecilnya pupil.</p><p style="font-size:.88em;break-inside:avoid;margin-bottom:.4em"><b style="color:#fde68a">Lensa</b>: Benda bening untuk membiaskan cahaya agar membentuk bayangan.</p><p style="font-size:.88em;break-inside:avoid;margin-bottom:.4em"><b style="color:#fde68a">Mikroskop</b>: Alat optik untuk mengamati benda sangat kecil agar tampak lebih besar dan jelas.</p><p style="font-size:.88em;break-inside:avoid;margin-bottom:.4em"><b style="color:#fde68a">Miopi</b>: Bayangan jatuh di depan retina sehingga objek jauh kabur.</p><p style="font-size:.88em;break-inside:avoid;margin-bottom:.4em"><b style="color:#fde68a">Pupil</b>: Lubang di tengah iris yang mengatur jumlah cahaya masuk ke mata.</p><p style="font-size:.88em;break-inside:avoid;margin-bottom:.4em"><b style="color:#fde68a">Retina</b>: Lapisan di belakang mata yang menangkap bayangan dan mengubahnya menjadi impuls saraf.</p><p style="font-size:.88em;break-inside:avoid;margin-bottom:.4em"><b style="color:#fde68a">Shutter</b>: Bagian kamera yang mengatur lamanya cahaya masuk.</p><p style="font-size:.88em;break-inside:avoid;margin-bottom:.4em"><b style="color:#fde68a">Teleskop</b>: Alat optik untuk mengamati benda yang sangat jauh agar terlihat lebih dekat dan jelas.</p></div></section>
+<section class="s b4"><h2>✍️ Latihan Uraian</h2><p>Jawab dulu dalam hati, lalu ketuk soal untuk melihat kunci jawabannya.</p><div class="glass" style="overflow:auto"><details><summary>1. Jelaskan fungsi kacamata! Sebutkan perbedaan fungsi lensa cembung, cekung, dan silinder.</summary><p>Kacamata memperbaiki gangguan refraksi dengan membiaskan cahaya agar bayangan jatuh tepat di retina. Cembung: mengumpulkan cahaya (hipermetropi). Cekung: menyebarkan cahaya (miopi). Silinder: memperbaiki pembiasan pada satu sumbu (astigmatisme).</p></details><details><summary>2. Mengapa rabun jauh memakai lensa cekung, sedangkan rabun dekat memakai lensa cembung?</summary><p>Rabun jauh: bayangan di depan retina, lensa cekung menyebarkan cahaya sehingga fokus bergeser ke belakang tepat di retina. Rabun dekat: bayangan di belakang retina, lensa cembung mengumpulkan cahaya sehingga fokus maju ke retina.</p></details><details><summary>3. Jelaskan cara kerja kamera menangkap gambar!</summary><p>Cahaya dari objek masuk lewat lensa cembung dan membentuk bayangan nyata, terbalik, diperkecil pada film (seperti retina). Diafragma mengatur banyak cahaya, shutter mengatur lamanya cahaya mengenai film. Film merekam bayangan lalu dicuci (developing).</p></details><details><summary>4. Apa fungsi mikroskop dan teleskop? Apa bedanya?</summary><p>Mikroskop mengamati benda sangat kecil (sel, jaringan, mikroorganisme) dengan lensa objektif dan okuler. Teleskop mengamati benda langit yang sangat jauh dengan mengumpulkan cahaya lewat lensa (refraktor) atau cermin (reflektor), lalu memperbesarnya dengan okuler.</p></details><details><summary>5. Jelaskan fungsi lup dan contoh penggunaannya!</summary><p>Lup (lensa cembung tunggal) memperbesar tampilan benda kecil dengan bayangan maya, tegak, diperbesar. Contoh: membaca tulisan kecil, mengamati serangga, pekerjaan yang butuh ketelitian tinggi.</p></details></div></section>
+<section class="s b1"><h2>🏆 Penutup & Rekapitulasi</h2>
+<div class="row"><div class="glass col" style="flex:1.3">
+<details open><summary>1. Mata</summary><p>Kornea, pupil, iris, lensa, retina. Akomodasi mengatur fokus.</p></details>
+<details><summary>2. Cacat mata</summary><p>Miopi → lensa cekung. Hipermetropi → lensa cembung. Astigmatisme → lensa silinder.</p></details>
+<details><summary>3. Sifat bayangan</summary><p>Kamera: nyata, terbalik, diperkecil. Mikroskop dan lup: akhirnya maya, tegak, diperbesar. Teleskop: maya, terbalik, diperbesar.</p></details><details><summary>4. Alat optik buatan</summary><p>Kacamata, kamera, mikroskop, teleskop, dan lup.</p></details></div>
+<div class="glass col" id="qz"></div></div></section>
+</div>
+
+<div id="md" onclick="this.classList.remove('show')"><div class="glass"><div style="font-size:5em">🏆</div><h2>Selamat, Agen!</h2><h3>Badge "Master Alat Optik"</h3><p>Kamu telah menyelesaikan semua misi! 🎉</p><br><button class="btn">Tutup</button></div></div>
+<div id="guide"><div id="bub"></div>
+<svg viewBox="0 0 125 130"><path d="M8 130Q10 84 60 80Q110 84 112 130Z" fill="#f8fafc"/><path d="M44 81L60 106L76 81Z" fill="#06B6D4"/><rect x="52" y="64" width="16" height="20" rx="6" fill="#e0b08a"/><path d="M28 50Q26 14 60 14Q94 14 92 50L94 84Q60 70 26 84Z" fill="#1e1b4b"/><ellipse cx="60" cy="48" rx="24" ry="27" fill="#f4cfae"/><path d="M35 44Q38 18 62 20Q84 22 85 44Q70 30 35 44Z" fill="#1e1b4b"/><rect x="34" y="23" width="52" height="7" rx="3.5" fill="#0891b2"/><rect x="40" y="16" width="16" height="12" rx="5" fill="#67e8f9" stroke="#0e7490" stroke-width="2"/><rect x="64" y="16" width="16" height="12" rx="5" fill="#67e8f9" stroke="#0e7490" stroke-width="2"/><ellipse cx="50" cy="50" rx="3" ry="4.2" fill="#1e1b4b"/><ellipse cx="70" cy="50" rx="3" ry="4.2" fill="#1e1b4b"/><circle cx="43" cy="59" r="4.5" fill="#fb7185" opacity=".35"/><circle cx="77" cy="59" r="4.5" fill="#fb7185" opacity=".35"/><path d="M51 62Q60 70 69 62Q60 66 51 62Z" fill="#9f1239"/><g class="arm"><line x1="98" y1="108" x2="116" y2="72" stroke="#f8fafc" stroke-width="13" stroke-linecap="round"/><circle cx="117" cy="67" r="7" fill="#f4cfae"/></g></svg></div>
+<div id="nav"><button onclick="go(c-1)">◄ Sebelumnya</button><span id="num"></span><button onclick="go(c+1)">Selanjutnya ►</button></div><div id="pg"></div></div>
+<script>
+const say=['Hai, aku Kak Sari! Yuk jelajahi dunia alat optik.','Ada satu capaian dan dua tujuan. Ketuk kartunya!','Centang indikator yang sudah kamu kuasai.','Ini peta konsepnya: alami dan buatan.','Ketuk tiap bagian mata untuk tahu fungsinya!','Terang: pupil menyempit. Redup: pupil melebar.','Lihat dekat, lensa menebal. Lihat jauh, lensa menipis.','Coba pakai kacamata, bayangan pindah ke retina!','Cembung untuk hipermetropi, cekung untuk miopi.','Kamera mirip mata: film itu seperti retina.','Objektif dan okuler bekerja bergantian.','Teleskop: makin besar objektif, makin terang.','Letakkan objek di antara lensa dan fokus!','Bandingkan sifat bayangan tiap alat ya.','Ini istilah penting dari bahan ajar kita.','Coba jawab soal uraian dengan kata-katamu sendiri.','Jawab 10 tantangan untuk klaim badge!'],
+cs=['','Arsip misi','Kartu agen','Peta konsep','Anatomi mata','Pupil','Akomodasi','Cacat mata','Kacamata','Kamera','Mikroskop','Teleskop','Lup','Perbandingan','Glosarium','Latihan uraian','Misi tuntas'],
+$=id=>document.getElementById(id),md2=$('md'),S=[...document.querySelectorAll('.s')],N=S.length;let c=0;
+function go(n){if(n<0||n>=N)return;c=n;S.forEach((e,i)=>e.className=e.className.replace(/ ?(on|prev)\b/g,'')+(i==n?' on':i<n?' prev':''));$('num').textContent='SLIDE '+String(n+1).padStart(2,'0')+' / '+N;$('pg').style.width=(n+1)/N*100+'%';const b=$('bub');b.textContent=say[n];b.style.animation='none';b.offsetHeight;b.style.animation=''}
+addEventListener('keydown',e=>{if(e.key=='ArrowRight')go(c+1);if(e.key=='ArrowLeft')go(c-1)});
+function ck(e,i){e.classList.toggle('done');e.firstChild.textContent=e.classList.contains('done')?'✓':'';document.querySelectorAll('.bd')[i].classList.toggle('on');const k=document.querySelectorAll('.ck.done').length;$('bm').textContent=k==3?'🎉 Agen Optik Lulus!':'Badge: '+k+' / 3'}
+function pk(e,t){const p=e.closest('.s');p.querySelectorAll('.n').forEach(x=>x.classList.remove('sel'));e.classList.add('sel');p.querySelector('.pn').innerHTML=t}
+function hl(k){for(let i=0;i<5;i++){const e=$('e'+i);e.style.filter=i==k?'drop-shadow(0 0 8px #F59E0B)':'';e.style.opacity=i==k?1:.45}}
+function pu(){const v=+$('lv').value;$('lvv').textContent=v;$('pp').setAttribute('r',36-v*.28);$('lt').textContent=v<40?'Redup → pupil melebar, sel batang bekerja.':v>60?'Terang → pupil menyempit, sel kerucut bekerja.':'Cahaya sedang → pupil ukuran sedang.'}
+function ak(k){$('a0').classList.toggle('on',!k);$('a1').classList.toggle('on',!!k);$('lz').style.transform=`scaleX(${k?1.8:.6})`;$('at').innerHTML=k?'<b>Objek dekat</b>: otot siliaris <b>berkontraksi</b>, lensa <b>menebal</b> agar fokus tetap jelas.':'<b>Objek jauh</b>: otot siliaris <b>rileks</b>, lensa <b>menipis</b>.'}
+const T=[['Miopi (rabun jauh)','Bayangan jatuh di <b>depan</b> retina, objek jauh kabur. Gejala: memicingkan mata, mata cepat lelah. Sebab: bola mata terlalu panjang, atau lensa/kornea terlalu cembung. Koreksi: lensa cekung.'],['Hipermetropi (rabun dekat)','Bayangan jatuh di <b>belakang</b> retina, objek dekat kabur. Gejala: sulit membaca, pusing dan sakit kepala. Sebab: bola mata terlalu pendek, atau lensa terlalu pipih. Koreksi: lensa cembung.'],['Astigmatisme (silinder)','Kornea/lensa tidak rata, cahaya tersebar di beberapa titik, bayangan kabur atau ganda, garis lurus tampak miring. Sulit melihat dekat maupun jauh. Koreksi: lensa silinder.']];let cmk=0,gl=0;
+function cm(k){cmk=k;gl=0;dg()}
+function dg(){const k=cmk,L=['cekung','cembung','silinder'];[0,1,2].forEach(i=>$('c'+i).classList.toggle('on',i==k));$('ct').innerHTML='<b>'+T[k][0]+'</b><br>'+T[k][1];$('gb').textContent=gl?'👓 Lepas kacamata':'👓 Pakai kacamata (lensa '+L[k]+')';
+const f=gl?[245,245]:k==2?[215,275]:[[205,205],[285,285]][k],r=(y,x)=>`<polyline points="10,${y} 125,${y} ${x},110" fill="none" stroke="#FF6B6B" stroke-width="3"/><circle cx="${x}" cy="110" r="5" fill="#fde047"/>`;
+$('ce').innerHTML=`<circle cx="170" cy="110" r="75" fill="rgba(6,182,212,.2)" stroke="#e0f2fe" stroke-width="3"/><path d="M245 60Q262 110 245 160" fill="none" stroke="#fb7185" stroke-width="7"/><text x="215" y="48" fill="#fb7185" font-size="12">retina</text><ellipse cx="125" cy="110" rx="8" ry="32" fill="rgba(253,224,71,.4)" stroke="#fde047" stroke-width="2"/>`+r(75,f[0])+r(145,f[1]);
+$('cs').textContent=gl?'✅ Bayangan tepat di retina: penglihatan jelas!':k==0?'❌ Bayangan di depan retina':k==1?'❌ Bayangan di belakang retina':'❌ Bayangan tersebar di beberapa titik'}
+function mk(n,b){b.parentNode.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));b.classList.add('on');$('mt').textContent=`Objektif ${n}× × okuler 10× = perbesaran total ${n*10}×`}
+function lp(){const s=+$('sl').value,f=5;$('sv').textContent=s;const o=$('ob'),x=150-s*10;o.setAttribute('x1',x);o.setAttribute('x2',x);o.setAttribute('y1',100);o.setAttribute('y2',70);$('ol').setAttribute('x',x-12);$('ol').setAttribute('y',60);$('ol').textContent='objek';
+$('lr').textContent=s<f?`Bayangan MAYA, TEGAK, diperbesar ±${(f/(f-s)).toFixed(1)}× ✔ (fungsi lup)`:s==f?'Berkas sejajar: bayangan di tak terhingga.':`Bayangan NYATA, TERBALIK (bukan cara pakai lup).`}
+const Q=[["Bagian mata yang berfungsi membiaskan cahaya pertama kali sebelum diteruskan ke bagian mata lainnya adalah ....",["Retina","Iris","Kornea","Pupil"],2,"Kornea di bagian depan mata membiaskan cahaya lebih dulu (±2/3 daya bias mata)."],
+["Rizki disarankan dokter memakai kacamata berlensa silinder. Ini menunjukkan ia mengalami gangguan penglihatan ....",["Hipermetropi","Astigmatisme","Presbiopi","Miopi"],1,"Lensa silinder dipakai untuk mengoreksi astigmatisme."],
+["Retina berfungsi untuk ....",["Mengatur ukuran pupil","Membiaskan cahaya","Menangkap bayangan dan mengubahnya menjadi impuls saraf","Melindungi bagian depan mata"],2,"Retina tempat bayangan terbentuk, lalu diubah menjadi impuls listrik ke otak lewat saraf optik."],
+["Mata termasuk alat optik karena mata memiliki ....",["Lensa mata","Saraf mata","Kacamata","Otot mata"],0,"Lensa mata membiaskan dan memfokuskan cahaya, seperti alat optik."],
+["Miopi atau rabun jauh terjadi karena bayangan jatuh ....",["Tepat di retina","Di belakang retina","Di depan retina","Di saraf optik"],2,"Pada miopi, bayangan jatuh di depan retina."],
+["Seseorang yang sulit melihat tulisan di papan tulis dari bangku paling belakang kemungkinan mengalami ....",["Hipermetropi","Astigmatisme","Miopi","Presbiopi"],2,"Sulit melihat benda jauh adalah ciri miopi."],
+["Hipermetropi dapat terjadi karena ....",["Bola mata terlalu panjang","Kornea terlalu melengkung","Bola mata terlalu pendek","Retina rusak"],2,"Bola mata terlalu pendek membuat bayangan jatuh di belakang retina."],
+["Kelainan mata yang menyebabkan objek tampak berbayang atau ganda disebut ....",["Miopi","Hipermetropi","Astigmatisme","Katarak"],2,"Pada astigmatisme cahaya tersebar di beberapa titik, bayangan tampak ganda."],
+["Astigmatisme biasanya dikoreksi menggunakan ....",["Lensa cekung","Lensa cembung","Lensa rangkap","Lensa silinder"],3,"Lensa silinder memfokuskan cahaya secara merata pada retina."],
+["Alat optik untuk mengamati benda sangat kecil agar tampak lebih besar adalah ....",["Lup","Kamera","Mikroskop","Teleskop"],2,"Mikroskop dipakai mengamati sel, jaringan, dan mikroorganisme."]];let qi=0,sc=0;
+function rq(){const q=$('qz');if(qi>=10){q.innerHTML=`<h3>Skor: ${sc} / 10</h3><p>${sc>=8?'Keren, Agen! Badge terbuka 🏅':'Belum lulus. Ulangi misi dan coba lagi ya!'}</p>`+(sc>=8?'<button class="btn" onclick="md2.classList.add(\'show\')">Klaim Badge</button>':'')+'<button class="btn o" onclick="reset()">↺ Ulangi Misi</button>';return}const x=Q[qi];q.innerHTML=`<h3>Tantangan ${qi+1} / 10</h3><p>${x[0]}</p>`+x[1].map((o,j)=>`<button class="btn" style="text-align:left;font-size:.82em;padding:.4em 1em" onclick="aq(${j})">${o}</button>`).join('')}
+function aq(j){const x=Q[qi],ok=j==x[2];if(ok)sc++;$('qz').innerHTML=`<h3>${ok?'✅ Tepat!':'❌ Belum tepat'}</h3><p>${x[3]}</p><button class="btn" onclick="qi++;rq()">Lanjut ►</button>`}
+S.forEach((e,i)=>{if(i){const t=document.createElement('div');t.className='tag';t.textContent='ARSIP LAB #'+String(i+1).padStart(2,'0')+' · '+cs[i].toUpperCase();e.prepend(t)}});
+function reset(){qi=0;sc=0;rq();document.querySelectorAll('.ck.done').forEach(e=>e.click());document.querySelectorAll('.open,.f,.sel').forEach(e=>e.classList.remove('open','f','sel'));go(0)}
+rq();pu();ak(0);dg();lp();mk(10,document.querySelector('#mt').parentNode.querySelector('.on'));hl(-1);go(0);
+</script></body></html>
